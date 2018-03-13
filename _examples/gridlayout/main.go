@@ -24,11 +24,11 @@ func main() {
 
 	row := gobless.NewRow(
 		gobless.NewColumn(
-			gobless.ColumnSizeHalf,
+			gobless.ColumnSizeOneSixth,
 			helloTextbox,
 		),
 		gobless.NewColumn(
-			gobless.ColumnSizeHalf,
+			gobless.ColumnSizeFiveSixths,
 			quitTextbox,
 		),
 	)
