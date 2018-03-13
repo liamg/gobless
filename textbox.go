@@ -1,15 +1,16 @@
 package gobless
 
-import "image"
+import (
+	"image"
+)
 
 type TextBox struct {
-	Width       int
-	Height      int
-	X           int
-	Y           int
+	width       int
+	height      int
+	x           int
+	y           int
 	Text        string
 	Wrap        bool
-	Border      bool
 	Style       Style
 	BorderColor Color
 }
@@ -17,68 +18,73 @@ type TextBox struct {
 func NewTextBox() *TextBox {
 	return &TextBox{
 		Style:       DefaultStyle,
-		BorderColor: NewColor(255, 255, 255),
+		BorderColor: NewColor(0, 255, 255),
 	}
 }
 
-func (textbox *TextBox) GetTiles() []Tile {
+func (textbox *TextBox) SetX(x int) {
+	textbox.x = x
+}
+func (textbox *TextBox) SetY(y int) {
+	textbox.y = y
+}
+func (textbox *TextBox) SetWidth(w int) {
+	textbox.width = w
+}
+func (textbox *TextBox) SetHeight(h int) {
+	textbox.height = h
+}
+
+func (textbox *TextBox) GetTiles(gui *GUI) []Tile {
 
 	cells := map[image.Point]Cell{}
 
 	textArea := image.Rectangle{
-		Min: image.Point{},
-		Max: image.Point{X: textbox.Width, Y: textbox.Height},
+		Min: image.Point{X: 1, Y: 1},
+		Max: image.Point{X: textbox.width - 2, Y: textbox.height - 2},
 	}
 
-	if textbox.Border {
-		// keep text off borders
-		textArea.Min.X++
-		textArea.Min.Y++
-		textArea.Max.X--
-		textArea.Max.Y--
-
-	}
-
-	for x := 0; x < textbox.Width; x++ {
-		for y := 0; y < textbox.Height; y++ {
+	for x := 0; x < textbox.width; x++ {
+		for y := 0; y < textbox.height; y++ {
 
 			cell := Cell{
 				Rune:  ' ',
 				Style: textbox.Style,
 			}
-			if textbox.Border {
-				if y == 0 {
-					switch x {
-					case 0:
-						cell.Rune = '┌'
-					case textArea.Max.X:
-						cell.Rune = '┐'
-					default:
-						cell.Rune = '─'
-					}
-					cell.Style.ForegroundColor = textbox.BorderColor
 
-				} else if y == textArea.Max.Y {
-					switch x {
-					case 0:
-						cell.Rune = '└'
-					case textArea.Max.X:
-						cell.Rune = '┘'
-					default:
-						cell.Rune = '─'
-					}
-					cell.Style.ForegroundColor = textbox.BorderColor
-				} else if x == 0 || x == textArea.Max.X {
-					cell.Rune = '│'
-					cell.Style.ForegroundColor = textbox.BorderColor
+			if y == 0 {
+				switch x {
+				case 0:
+					cell.Rune = '┌'
+				case textbox.width - 1:
+					cell.Rune = '┐'
+				default:
+					cell.Rune = '─'
 				}
+				cell.Style.ForegroundColor = textbox.BorderColor
 
+			} else if y == textbox.height-1 {
+				switch x {
+				case 0:
+					cell.Rune = '└'
+				case textbox.width - 1:
+					cell.Rune = '┘'
+				default:
+					cell.Rune = '─'
+				}
+				cell.Style.ForegroundColor = textbox.BorderColor
+			} else if x == 0 || x == textbox.width-1 {
+				cell.Rune = '│'
+				cell.Style.ForegroundColor = textbox.BorderColor
 			}
+
 			cells[image.Point{X: x, Y: y}] = cell
 		}
 	}
 
 	x, y := textArea.Min.X, textArea.Min.Y
+
+	//textbox.Text = fmt.Sprintf("%d,%d %d,%d", textbox.x, textbox.y, textbox.width, textbox.height)
 
 	for _, r := range []rune(textbox.Text) {
 		if !textbox.Wrap && x >= textArea.Max.X {
@@ -109,8 +115,8 @@ func (textbox *TextBox) GetTiles() []Tile {
 	return []Tile{
 		Tile{
 			Rectangle: image.Rectangle{
-				Min: image.Point{X: textbox.X, Y: textbox.Y},
-				Max: image.Point{X: textbox.X + textbox.Width, Y: textbox.Y + textbox.Height},
+				Min: image.Point{X: textbox.x, Y: textbox.y},
+				Max: image.Point{X: textbox.x + textbox.width - 1, Y: textbox.y + textbox.height - 1},
 			},
 			Cells: cells,
 		},

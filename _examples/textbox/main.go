@@ -13,10 +13,10 @@ func main() {
 	defer gui.Close()
 
 	textbox := gobless.NewTextBox()
-	textbox.X = 2
-	textbox.Y = 2
-	textbox.Width = 24
-	textbox.Height = 4
+	textbox.SetX(2)
+	textbox.SetY(2)
+	textbox.SetWidth(24)
+	textbox.SetHeight(4)
 	textbox.Border = true
 	textbox.BorderColor = gobless.NewColor(255, 0, 0)
 	textbox.Wrap = true

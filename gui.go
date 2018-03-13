@@ -1,6 +1,7 @@
 package gobless
 
 import (
+	"math"
 	"sync"
 	"time"
 
@@ -84,19 +85,46 @@ func (gui *GUI) renderComponents(components []Component) {
 	gui.renderMutex.Lock()
 	defer gui.renderMutex.Unlock()
 
+	rowCount := 0
+
 	for _, component := range components {
-		for _, tile := range component.GetTiles() {
+		switch component.(type) {
+		case *Row:
+			rowCount++
+		}
+	}
+
+	_, height := gui.Size()
+	rowHeight := height
+	spareHeight := 0
+	if rowCount > 0 {
+		rowHeightFloat := float64(height) / float64(rowCount)
+		rowHeight = int(math.Floor(rowHeightFloat))
+		spareHeight = height - (rowHeight * rowCount)
+	}
+
+	rowOffset := 0
+
+	for _, component := range components {
+		switch row := component.(type) {
+		case *Row:
+			row.height = rowHeight + spareHeight // give "leftover" height runes to the first row, e.g. if there is a height of 10 runes and there are 3 rows, each row will get 3 runes of height, and the first row will get the "spare" 1, to make 10.
+			row.y = rowOffset
+			row.x = 0
+			rowOffset += row.height
+			spareHeight = 0
+		}
+		for _, tile := range component.GetTiles(gui) {
 			for point, cell := range tile.Cells {
-				if point.Add(tile.Rectangle.Min).In(tile.Rectangle) {
-					gui.screen.SetCell(
-						tile.Rectangle.Min.X+point.X,
-						tile.Rectangle.Min.Y+point.Y,
-						cell.Style.toTCell(),
-						cell.Rune,
-					)
-				}
+				gui.screen.SetCell(
+					tile.Rectangle.Min.X+point.X,
+					tile.Rectangle.Min.Y+point.Y,
+					cell.Style.toTCell(),
+					cell.Rune,
+				)
 			}
 		}
+
 	}
 
 	gui.screen.Show()
