@@ -11,10 +11,13 @@ func main() {
 
 	helloTextbox := gobless.NewTextBox()
 	helloTextbox.Text = `Hello World!`
-	helloTextbox.BorderColor = gobless.NewColor(255, 0, 0)
+	helloTextbox.BorderColor = gobless.NewColor(0, 255, 0)
+	helloTextbox.SetTitle("Message")
 
 	quitTextbox := gobless.NewTextBox()
 	quitTextbox.Text = `Press Ctrl-q to exit.`
+	quitTextbox.Style = gobless.DefaultStyle
+	quitTextbox.BorderColor = gobless.NewColor(255, 0, 0)
 
 	otherTextbox := gobless.NewTextBox()
 	otherTextbox.Text = `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`
