@@ -116,14 +116,14 @@ func (gui *GUI) renderComponents(components []Component) {
 		}
 		for _, tile := range component.GetTiles(gui) {
 			for point, cell := range tile.Cells {
-				//if point.Add(tile.Rectangle.Min).In(tile.Rectangle) {
-				gui.screen.SetCell(
-					tile.Rectangle.Min.X+point.X,
-					tile.Rectangle.Min.Y+point.Y,
-					cell.Style.toTCell(),
-					cell.Rune,
-				)
-				//}
+				if point.X >= 0 && point.X <= tile.Rectangle.Max.X-tile.Rectangle.Min.X && point.Y >= 0 && point.Y <= tile.Rectangle.Max.Y-tile.Rectangle.Min.Y {
+					gui.screen.SetCell(
+						tile.Rectangle.Min.X+point.X,
+						tile.Rectangle.Min.Y+point.Y,
+						cell.Style.toTCell(),
+						cell.Rune,
+					)
+				}
 			}
 		}
 

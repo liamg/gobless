@@ -18,7 +18,7 @@ const (
 	ColumnSizeThreeQuarters ColumnSize = 9
 	ColumnSizeTwoThirds     ColumnSize = 8
 	ColumnSizeHalf          ColumnSize = 6
-	ColumnSizeThird         ColumnSize = 4
+	ColumnSizeOneThird      ColumnSize = 4
 	ColumnSizeQuarter       ColumnSize = 3
 	ColumnSizeOneSixth      ColumnSize = 2
 )

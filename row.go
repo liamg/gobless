@@ -33,8 +33,12 @@ func (row *Row) SetHeight(h int) {
 
 func (row *Row) GetTiles(gui *GUI) []Tile {
 
-	var h int
-	row.width, h = gui.Size()
+	var w, h int
+	w, h = gui.Size()
+
+	if row.width == 0 {
+		row.width = w
+	}
 
 	if row.height == 0 {
 		row.height = h
@@ -58,7 +62,7 @@ func (row *Row) GetTiles(gui *GUI) []Tile {
 		col.y = row.y
 		colOffset += col.width
 
-		if flSum > 0.5 {
+		if flSum >= 1 {
 			flSum--
 			col.width++
 		}

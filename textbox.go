@@ -9,22 +9,25 @@ type TextBox struct {
 	height      int
 	x           int
 	y           int
-	Text        string
-	Wrap        bool
-	Style       Style
-	BorderColor Color
+	text        string
+	wrap        bool
+	style       Style
+	borderColor Color
 	title       string
 }
 
 func NewTextBox() *TextBox {
 	return &TextBox{
-		Style:       DefaultStyle,
-		BorderColor: NewColor(0, 255, 255),
+		style:       DefaultStyle,
+		borderColor: NewColor(0, 255, 255),
 	}
 }
 
 func (textbox *TextBox) SetTitle(title string) {
 	textbox.title = title
+}
+func (textbox *TextBox) SetBorderColor(color Color) {
+	textbox.borderColor = color
 }
 
 func (textbox *TextBox) SetX(x int) {
@@ -40,6 +43,16 @@ func (textbox *TextBox) SetHeight(h int) {
 	textbox.height = h
 }
 
+func (component *TextBox) SetTextWrap(enabled bool) {
+	component.wrap = enabled
+}
+func (component *TextBox) SetText(text string) {
+	component.text = text
+}
+func (component *TextBox) SetStyle(style Style) {
+	component.style = style
+}
+
 func (textbox *TextBox) GetTiles(gui *GUI) []Tile {
 
 	cells := map[image.Point]Cell{}
@@ -49,8 +62,8 @@ func (textbox *TextBox) GetTiles(gui *GUI) []Tile {
 	textWidth := textbox.width - 2 // remove border dimensions
 	textHeight := textbox.height - 2
 
-	for _, r := range []rune(textbox.Text) {
-		if !textbox.Wrap && x >= textWidth {
+	for _, r := range []rune(textbox.text) {
+		if !textbox.wrap && x >= textWidth {
 			continue
 		}
 		switch r {
@@ -63,10 +76,10 @@ func (textbox *TextBox) GetTiles(gui *GUI) []Tile {
 		}
 		cells[image.Point{X: x, Y: y}] = Cell{
 			Rune:  r,
-			Style: textbox.Style,
+			Style: textbox.style,
 		}
 		x++
-		if textbox.Wrap && x > textWidth {
+		if textbox.wrap && x > textWidth {
 			x = 0
 			y++
 		}
@@ -83,8 +96,8 @@ func (textbox *TextBox) GetTiles(gui *GUI) []Tile {
 	border.SetText(textbox.title)
 	border.SetStyle(
 		Style{
-			BackgroundColor: textbox.Style.BackgroundColor,
-			ForegroundColor: textbox.BorderColor,
+			BackgroundColor: textbox.style.BackgroundColor,
+			ForegroundColor: textbox.borderColor,
 		},
 	)
 
