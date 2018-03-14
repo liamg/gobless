@@ -8,18 +8,15 @@ type Style struct {
 }
 
 var DefaultStyle = Style{
-	ForegroundColor: NewColor(0xff, 0xff, 0xff),
-	BackgroundColor: NewColor(0x00, 0x00, 0x00),
+	ForegroundColor: ColorWhite,
+	BackgroundColor: ColorBlack,
 }
 
-type Color int32
-
-func NewColor(r uint32, g uint32, b uint32) Color {
-	return Color((1 << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff))
-}
-
-func (color *Color) toTCell() tcell.Color {
-	return tcell.Color(*color)
+func NewStyle(backgroundColor Color, foregroundColor Color) Style {
+	return Style{
+		BackgroundColor: backgroundColor,
+		ForegroundColor: foregroundColor,
+	}
 }
 
 func (style *Style) toTCell() tcell.Style {

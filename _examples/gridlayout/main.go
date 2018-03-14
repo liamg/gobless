@@ -11,32 +11,34 @@ func main() {
 
 	helloTextbox := gobless.NewTextBox()
 	helloTextbox.SetText(`Hello World!`)
-	helloTextbox.SetBorderColor(gobless.NewColor(0, 255, 0))
+	helloTextbox.SetBorderColor(gobless.ColorGreen)
 	helloTextbox.SetTitle("Message")
 
 	quitTextbox := gobless.NewTextBox()
 	quitTextbox.SetText(`Press Ctrl-q to exit.`)
-	quitTextbox.SetStyle(gobless.DefaultStyle)
-	quitTextbox.SetBorderColor(gobless.NewColor(255, 0, 0))
+	quitTextbox.SetBorderColor(gobless.ColorRed)
 
-	otherTextbox := gobless.NewTextBox()
-	otherTextbox.SetText(`AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`)
+	chart := gobless.NewBarChart()
+	chart.SetTitle("Traffic")
+	chart.SetBar("EU", 60)
+	chart.SetBar("NA", 72)
+	chart.SetBar("SA", 37)
 
 	row := gobless.NewRow(
 		gobless.NewColumn(
-			gobless.ColumnSizeOneSixth,
+			gobless.ColumnSizeTwoThirds,
 			helloTextbox,
 		),
 		gobless.NewColumn(
-			gobless.ColumnSizeFiveSixths,
-			quitTextbox,
+			gobless.ColumnSizeOneThird,
+			chart,
 		),
 	)
 
 	lowerRow := gobless.NewRow(
 		gobless.NewColumn(
-			gobless.ColumnSizeFiveSixths,
-			otherTextbox,
+			gobless.ColumnSizeFull,
+			quitTextbox,
 		),
 	)
 

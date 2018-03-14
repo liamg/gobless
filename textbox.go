@@ -19,7 +19,7 @@ type TextBox struct {
 func NewTextBox() *TextBox {
 	return &TextBox{
 		style:       DefaultStyle,
-		borderColor: NewColor(0, 255, 255),
+		borderColor: ColorDarkCyan,
 	}
 }
 
@@ -94,12 +94,7 @@ func (textbox *TextBox) GetTiles(gui *GUI) []Tile {
 	border.SetWidth(textbox.width)
 	border.SetHeight(textbox.height)
 	border.SetText(textbox.title)
-	border.SetStyle(
-		Style{
-			BackgroundColor: textbox.style.BackgroundColor,
-			ForegroundColor: textbox.borderColor,
-		},
-	)
+	border.SetStyle(NewStyle(textbox.style.BackgroundColor, textbox.borderColor))
 
 	return append([]Tile{
 		Tile{

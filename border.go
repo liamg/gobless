@@ -5,19 +5,23 @@ import (
 )
 
 type Border struct {
-	width  int
-	height int
-	x      int
-	y      int
-	text   string
-	style  Style
+	width     int
+	height    int
+	x         int
+	y         int
+	text      string
+	style     Style
+	textStyle Style
 }
 
 func NewBorder() *Border {
 	style := DefaultStyle
-	style.ForegroundColor = NewColor(0, 255, 255)
+	style.ForegroundColor = ColorDarkCyan
+	textStyle := DefaultStyle
+	textStyle.ForegroundColor = ColorWhite
 	return &Border{
-		style: style,
+		style:     style,
+		textStyle: textStyle,
 	}
 }
 
@@ -106,6 +110,8 @@ func (component *Border) GetTiles(gui *GUI) []Tile {
 
 	for x := 0; x < component.width; x++ {
 
+		style := component.style
+
 		borderRune := horizontal
 
 		if x == 0 {
@@ -116,7 +122,7 @@ func (component *Border) GetTiles(gui *GUI) []Tile {
 
 		bottomTile.Cells[image.Point{X: x, Y: 0}] = Cell{
 			Rune:  borderRune,
-			Style: component.style,
+			Style: style,
 		}
 
 		if x == 0 {
@@ -125,11 +131,12 @@ func (component *Border) GetTiles(gui *GUI) []Tile {
 			borderRune = topRight
 		} else if x >= textOffsetFromCorner && x-textOffsetFromCorner < len(component.text) {
 			borderRune = []rune(component.text)[x-textOffsetFromCorner]
+			style = component.textStyle
 		}
 
 		topTile.Cells[image.Point{X: x, Y: 0}] = Cell{
 			Rune:  borderRune,
-			Style: component.style,
+			Style: style,
 		}
 	}
 

@@ -62,9 +62,10 @@ func (row *Row) GetTiles(gui *GUI) []Tile {
 		col.y = row.y
 		colOffset += col.width
 
-		if flSum >= 1 {
+		if flSum >= 0.999 { // avoid floating point fun :/
 			flSum--
-			col.width++
+			col.width = col.width + 1
+
 		}
 
 		col.height = row.height
