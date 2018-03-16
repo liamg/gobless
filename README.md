@@ -17,6 +17,19 @@ You can get started by viewing the various [examples](_examples/).
 
 ### Bar Chart
 
+![example](./_examples/barchart/example.gif)
+
+```
+chart := gobless.NewBarChart()
+chart.SetTitle("Traffic")
+chart.SetWidth(40)
+chart.SetHeight(15)
+chart.SetYScale(100)
+chart.SetBar("Europe", 60)
+chart.SetBar("US", 72)
+chart.SetBar("Asia", 37)
+```
+
 ### Sparkline
 
 ### Progress Bar
