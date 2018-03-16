@@ -101,7 +101,7 @@ func (barchart *BarChart) GetTiles(gui *GUI) []Tile {
 
 	startX = int(leftoverChars / 2)
 
-	maxBarHeight := barchart.height - 2
+	maxBarHeight := barchart.height - 3
 
 	maxValue := 0
 
@@ -117,13 +117,23 @@ func (barchart *BarChart) GetTiles(gui *GUI) []Tile {
 			(float64(bar.Value)/float64(maxValue))*float64(maxBarHeight),
 		))
 
+		if barHeight > maxBarHeight {
+			barHeight = maxBarHeight
+		}
+
 		tile.SetCells(
-			image.Rect(startX, barHeight-1, startX+widthPerBar-1, maxBarHeight-1),
+			image.Rect(startX, barHeight, startX+widthPerBar-1, maxBarHeight-1),
 			NewCell(' ', barchart.barstyle),
 		)
 
+		label := shortenInt(bar.Value)
+
+		for p := 0; p < len(label) && p < widthPerBar; p++ {
+			tile.SetCell(image.Point{X: startX + p, Y: barHeight}, NewCell([]rune(label)[p], barchart.barstyle))
+		}
+
 		for p := 0; p < len(bar.Name) && p < widthPerBar; p++ {
-			tile.SetCell(image.Point{X: startX + p, Y: maxBarHeight - 1}, NewCell([]rune(bar.Name)[p], barchart.barstyle))
+			tile.SetCell(image.Point{X: startX + p, Y: maxBarHeight}, NewCell([]rune(bar.Name)[p], barchart.style))
 		}
 
 		startX += widthPerBarArea
