@@ -19,10 +19,10 @@ func NewRow(columns ...*Column) *Row {
 }
 
 func (row *Row) SetWidth(w int) {
-
+	row.width = w
 }
 func (row *Row) SetHeight(h int) {
-
+	row.height = h
 }
 
 func (row *Row) SetX(x int) {
@@ -39,7 +39,7 @@ func (row *Row) GetTiles(gui *GUI) []Tile {
 
 	flSum := 0.0
 
-	colOffset := 0
+	colOffset := row.x
 
 	for _, col := range row.columns {
 
@@ -59,6 +59,7 @@ func (row *Row) GetTiles(gui *GUI) []Tile {
 
 		col.height = row.height
 		col.rowHeight = int(math.Floor(float64(row.height) / float64(len(col.components))))
+		col.firstRowHeight = col.rowHeight + (row.height - (len(col.components) * col.rowHeight))
 
 		tiles = append(tiles, col.GetTiles(gui)...)
 	}

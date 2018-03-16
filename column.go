@@ -1,13 +1,14 @@
 package gobless
 
 type Column struct {
-	components []Component
-	width      int
-	height     int
-	size       ColumnSize
-	x          int
-	y          int
-	rowHeight  int
+	components     []Component
+	width          int
+	height         int
+	size           ColumnSize
+	x              int
+	y              int
+	firstRowHeight int
+	rowHeight      int
 }
 
 type ColumnSize int
@@ -49,12 +50,19 @@ func (col *Column) GetTiles(gui *GUI) []Tile {
 
 	yOffset := 0
 
-	for _, component := range col.components {
+	for i, component := range col.components {
+
 		component.SetX(col.x)
 		component.SetY(col.y + yOffset)
 		component.SetWidth(col.width)
-		component.SetHeight(col.rowHeight)
-		yOffset += col.rowHeight
+		if i == 0 {
+			component.SetHeight(col.firstRowHeight)
+			yOffset += col.firstRowHeight
+		} else {
+			component.SetHeight(col.rowHeight)
+			yOffset += col.rowHeight
+		}
+
 		tiles = append(tiles, component.GetTiles(gui)...)
 	}
 
