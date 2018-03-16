@@ -17,6 +17,7 @@ type BarChart struct {
 	title       string
 	bars        []barChartBar
 	space       bool
+	yScale      int
 }
 
 type barChartBar struct {
@@ -27,7 +28,7 @@ type barChartBar struct {
 func NewBarChart() *BarChart {
 	return &BarChart{
 		style:       DefaultStyle,
-		barstyle:    NewStyle(ColorRoyalBlue, ColorWhite),
+		barstyle:    NewStyle(ColorDarkBlue, ColorWhite),
 		borderColor: ColorDarkCyan,
 		bars:        []barChartBar{},
 		space:       true,
@@ -36,6 +37,9 @@ func NewBarChart() *BarChart {
 
 func (barchart *BarChart) SetBarSpacing(space bool) {
 	barchart.space = space
+}
+func (barchart *BarChart) SetYScale(scale int) {
+	barchart.yScale = scale
 }
 func (barchart *BarChart) SetTitle(title string) {
 	barchart.title = title
@@ -103,37 +107,60 @@ func (barchart *BarChart) GetTiles(gui *GUI) []Tile {
 
 	maxBarHeight := barchart.height - 3
 
-	maxValue := 0
+	maxValue := barchart.yScale
 
-	for _, bar := range barchart.bars {
-		if bar.Value > maxValue {
-			maxValue = bar.Value
+	if maxValue == 0 {
+		for _, bar := range barchart.bars {
+			if bar.Value > maxValue {
+				maxValue = bar.Value
+			}
 		}
 	}
 
 	for index, bar := range barchart.bars {
 
-		barHeight := maxBarHeight - int(math.Floor(
-			(float64(bar.Value)/float64(maxValue))*float64(maxBarHeight),
+		barHeight := int(math.Round(
+			(float64(bar.Value) / float64(maxValue)) * float64(maxBarHeight),
 		))
 
 		if barHeight > maxBarHeight {
 			barHeight = maxBarHeight
+		} else if barHeight < 0 {
+			barHeight = 0
 		}
+
+		barTopOffset := maxBarHeight - barHeight
 
 		tile.SetCells(
-			image.Rect(startX, barHeight, startX+widthPerBar-1, maxBarHeight-1),
-			NewCell(' ', barchart.barstyle),
+			image.Rect(startX, 0, startX+widthPerBar-1, maxBarHeight-1),
+			NewCell(' ', barchart.style),
 		)
 
-		label := shortenInt(bar.Value)
+		if barHeight > 0 {
+			tile.SetCells(
+				image.Rect(startX, barTopOffset, startX+widthPerBar-1, maxBarHeight-1),
+				NewCell(' ', barchart.barstyle),
+			)
 
-		for p := 0; p < len(label) && p < widthPerBar; p++ {
-			tile.SetCell(image.Point{X: startX + p, Y: barHeight}, NewCell([]rune(label)[p], barchart.barstyle))
+			label := shortenInt(bar.Value)
+
+			for p := 0; p < len(label) && p < widthPerBar; p++ {
+				tile.SetCell(image.Point{X: startX + p, Y: barTopOffset}, NewCell([]rune(label)[p], barchart.barstyle))
+			}
+		} else {
+			label := shortenInt(bar.Value)
+
+			for p := 0; p < len(label) && p < widthPerBar; p++ {
+				tile.SetCell(image.Point{X: startX + p, Y: barTopOffset - 1}, NewCell([]rune(label)[p], barchart.style))
+			}
 		}
 
-		for p := 0; p < len(bar.Name) && p < widthPerBar; p++ {
-			tile.SetCell(image.Point{X: startX + p, Y: maxBarHeight}, NewCell([]rune(bar.Name)[p], barchart.style))
+		for p := 0; p < widthPerBar; p++ {
+			if p < len(bar.Name) {
+				tile.SetCell(image.Point{X: startX + p, Y: maxBarHeight}, NewCell([]rune(bar.Name)[p], barchart.style))
+			} else {
+				tile.SetCell(image.Point{X: startX + p, Y: maxBarHeight}, NewCell(' ', barchart.style))
+			}
 		}
 
 		startX += widthPerBarArea

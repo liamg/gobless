@@ -11,24 +11,28 @@ import (
 )
 
 type GUI struct {
-	width           int
-	height          int
-	keyEventChannel chan KeyPressEvent
-	keyHandlers     map[Key][]func(event KeyPressEvent)
-	renderMutex     sync.Mutex
-	quitChan        chan bool
-	closing         bool
-	screen          tcell.Screen
-	renderChannel   chan []Component
+	width              int
+	height             int
+	keyEventChannel    chan KeyPressEvent
+	resizeEventChannel chan ResizeEvent
+	keyHandlers        map[Key][]func(event KeyPressEvent)
+	resizeHandlers     []func(event ResizeEvent)
+	renderMutex        sync.Mutex
+	quitChan           chan bool
+	closing            bool
+	screen             tcell.Screen
+	renderChannel      chan []Component
 }
 
 func NewGUI() *GUI {
 	return &GUI{
-		keyEventChannel: make(chan KeyPressEvent, 1024),
-		keyHandlers:     map[Key][]func(event KeyPressEvent){},
-		renderMutex:     sync.Mutex{},
-		quitChan:        make(chan bool),
-		renderChannel:   make(chan []Component, 1024),
+		keyEventChannel:    make(chan KeyPressEvent, 1024),
+		resizeEventChannel: make(chan ResizeEvent, 1024),
+		keyHandlers:        map[Key][]func(event KeyPressEvent){},
+		resizeHandlers:     []func(event ResizeEvent){},
+		renderMutex:        sync.Mutex{},
+		quitChan:           make(chan bool),
+		renderChannel:      make(chan []Component, 1024),
 	}
 }
 
@@ -82,6 +86,11 @@ func (gui *GUI) HandleKeyPress(key Key, handler func(event KeyPressEvent)) {
 	gui.keyHandlers[key] = append(gui.keyHandlers[key], handler)
 }
 
+func (gui *GUI) HandleResize(handler func(event ResizeEvent)) {
+
+	gui.resizeHandlers = append(gui.resizeHandlers, handler)
+}
+
 func (gui *GUI) Clear() {
 	gui.screen.Clear()
 }
@@ -91,6 +100,19 @@ func (gui *GUI) renderComponents(components []Component) {
 	defer gui.renderMutex.Unlock()
 
 	rowCount := 0
+
+	w, h := gui.Size()
+
+	for x := 0; x < w; x++ {
+		for y := 0; y < h; y++ {
+			gui.screen.SetCell(
+				x,
+				y,
+				DefaultStyle.toTCell(),
+				' ',
+			)
+		}
+	}
 
 	for _, component := range components {
 		switch component.(type) {
@@ -113,6 +135,7 @@ func (gui *GUI) renderComponents(components []Component) {
 	for _, component := range components {
 		switch row := component.(type) {
 		case *Row:
+			row.width = w
 			row.height = rowHeight + spareHeight // give "leftover" height runes to the first row, e.g. if there is a height of 10 runes and there are 3 rows, each row will get 3 runes of height, and the first row will get the "spare" 1, to make 10.
 			row.y = rowOffset
 			row.x = 0
@@ -155,14 +178,6 @@ func (gui *GUI) Loop() {
 			time.Sleep(time.Millisecond * 100) // fix weird RC where terminal is orrupt unless we let tcell tidy up a tiny bit longer :/
 			return
 
-		case ev := <-tcellEventChan:
-			switch event := ev.(type) {
-			case *tcell.EventKey:
-				gui.keyEventChannel <- KeyPressEvent{
-					Key: Key(event.Key()),
-				}
-			}
-
 		case keyEvent := <-gui.keyEventChannel:
 			handlers, ok := gui.keyHandlers[Key(keyEvent.Key)]
 			if ok {
@@ -170,6 +185,30 @@ func (gui *GUI) Loop() {
 					go handler(keyEvent)
 				}
 			}
+		case resizeEvent := <-gui.resizeEventChannel:
+
+			gui.width, gui.height = gui.screen.Size()
+
+			for _, handler := range gui.resizeHandlers {
+				go handler(resizeEvent)
+			}
+
+		case ev := <-tcellEventChan:
+			switch event := ev.(type) {
+			case *tcell.EventKey:
+				gui.keyEventChannel <- KeyPressEvent{
+					Key: Key(event.Key()),
+				}
+			case *tcell.EventResize:
+				w, h := event.Size()
+				gui.resizeEventChannel <- ResizeEvent{
+					Width:  w,
+					Height: h,
+				}
+			default:
+				//fmt.Printf("Event: %#v\n", event)
+			}
+
 		case components := <-gui.renderChannel:
 			gui.renderComponents(components)
 		}

@@ -18,31 +18,20 @@ func NewRow(columns ...*Column) *Row {
 	}
 }
 
+func (row *Row) SetWidth(w int) {
+
+}
+func (row *Row) SetHeight(h int) {
+
+}
+
 func (row *Row) SetX(x int) {
 	row.x = x
 }
 func (row *Row) SetY(y int) {
 	row.y = y
 }
-func (row *Row) SetWidth(w int) {
-	row.width = w
-}
-func (row *Row) SetHeight(h int) {
-	row.height = h
-}
-
 func (row *Row) GetTiles(gui *GUI) []Tile {
-
-	var w, h int
-	w, h = gui.Size()
-
-	if row.width == 0 {
-		row.width = w
-	}
-
-	if row.height == 0 {
-		row.height = h
-	}
 
 	tiles := []Tile{}
 

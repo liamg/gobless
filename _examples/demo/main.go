@@ -1,6 +1,11 @@
 package main
 
-import "github.com/liamg/gobless"
+import (
+	"math/rand"
+	"time"
+
+	"github.com/liamg/gobless"
+)
 
 func main() {
 	gui := gobless.NewGUI()
@@ -20,9 +25,10 @@ func main() {
 
 	chart := gobless.NewBarChart()
 	chart.SetTitle("Traffic")
-	chart.SetBar("EU", 60)
-	chart.SetBar("NA", 72)
-	chart.SetBar("SA", 37)
+	chart.SetBar("Europe", 90)
+	chart.SetBar("US", 72)
+	chart.SetBar("Asia", 12)
+	chart.SetYScale(100)
 
 	row := gobless.NewRow(
 		gobless.NewColumn(
@@ -44,7 +50,28 @@ func main() {
 
 	gui.Render(row, lowerRow)
 
+	quitChan := make(chan bool)
+
+	rand.Seed(time.Now().UnixNano())
+
+	go func() {
+
+		for {
+			select {
+			case <-time.After(time.Second):
+				chart.SetBar("Europe", rand.Intn(30)+70)
+				chart.SetBar("US", rand.Intn(20)+50)
+				chart.SetBar("Asia", rand.Intn(10)+5)
+				gui.Render(row, lowerRow)
+			case <-quitChan:
+				break
+			}
+		}
+
+	}()
+
 	gui.HandleKeyPress(gobless.KeyCtrlQ, func(event gobless.KeyPressEvent) {
+		quitChan <- true
 		gui.Close()
 	})
 
