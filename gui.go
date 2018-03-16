@@ -1,11 +1,13 @@
 package gobless
 
 import (
+	"fmt"
 	"math"
 	"sync"
 	"time"
 
 	"github.com/gdamore/tcell"
+	"github.com/gdamore/tcell/terminfo"
 )
 
 type GUI struct {
@@ -35,6 +37,9 @@ func (gui *GUI) Init() error {
 	var err error
 	gui.screen, err = tcell.NewScreen()
 	if err != nil {
+		if err == terminfo.ErrTermNotFound {
+			return fmt.Errorf("Terminal entry not found. You can try setting:\n\n\texport TERM=xterm-256color\n\nOr simply:\n\n\texport TERM=xterm\n\n")
+		}
 		return err
 	}
 	if err := gui.screen.Init(); err != nil {
