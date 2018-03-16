@@ -45,6 +45,14 @@ func (barchart *BarChart) SetBorderColor(color Color) {
 }
 
 func (barchart *BarChart) SetBar(name string, value int) {
+
+	for i, bar := range barchart.bars {
+		if bar.Name == name {
+			barchart.bars[i].Value = value
+			return
+		}
+	}
+
 	barchart.bars = append(barchart.bars, barChartBar{name, value})
 }
 
