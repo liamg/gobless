@@ -16,7 +16,11 @@ Thanks to [tcell](https://github.com/gdamore/tcell), full cross-platform termina
 
 ## Get Started
 
-You can get started by viewing the various [examples](_examples/).
+```bash
+go get github.com/liamg/gobless
+```
+
+You can get started by experimenting with the various [examples](_examples/).
 
 ## Components
 
