@@ -73,13 +73,15 @@ Full example code is [here](_examples/barchart).
 
 The dot matrix component allows you set blocks of colour at double the resolution of the terminal characters, using the various partial quadrant unicode characters.
 
+It includes utility methods for drawing lines, circles etc.
+
 ![example](./_examples/dotmatrix/example.png)
 
 Example code is [here](_examples/dotmatrix).
 
 ## Layout System
 
-Gobless includes a built-in CSS style 12 column nestable grid layout system. This uses `Row`s and `Column`s (which are themselves components) to quickly build a UI with minimal effort. 
+Gobless includes a built-in CSS style 12 column nestable grid layout system. This uses `Rows` and `Columns` (which are themselves components) to quickly build a UI with minimal effort. 
 
 ![example](./_examples/gridlayout/example.png)
 
