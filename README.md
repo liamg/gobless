@@ -104,7 +104,8 @@ rows := []gobless.Component{
 				),
 			),
 		),
-	), gobless.NewRow(
+	), 
+	gobless.NewRow(
 		gobless.GridSizeHalf,
 		gobless.NewColumn(
 			gobless.GridSizeFull,
