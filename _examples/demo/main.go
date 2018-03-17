@@ -31,19 +31,21 @@ func main() {
 	chart.SetYScale(100)
 
 	row := gobless.NewRow(
+		gobless.GridSizeHalf,
 		gobless.NewColumn(
-			gobless.ColumnSizeTwoThirds,
+			gobless.GridSizeTwoThirds,
 			helloTextbox,
 		),
 		gobless.NewColumn(
-			gobless.ColumnSizeOneThird,
+			gobless.GridSizeOneThird,
 			chart,
 		),
 	)
 
 	lowerRow := gobless.NewRow(
+		gobless.GridSizeHalf,
 		gobless.NewColumn(
-			gobless.ColumnSizeFull,
+			gobless.GridSizeFull,
 			quitTextbox,
 		),
 	)

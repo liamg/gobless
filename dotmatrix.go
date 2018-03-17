@@ -98,37 +98,70 @@ func (screen *DotMatrix) getRune(topLeft bool, topRight bool, bottomLeft bool, b
 	switch true {
 	case topLeft && topRight && bottomLeft && bottomRight:
 		return '█'
-	case !topLeft && topRight && bottomLeft && bottomRight:
-		return '▟'
-	case topLeft && !topRight && bottomLeft && bottomRight:
-		return '▙'
-	case topLeft && !topRight && !bottomLeft && bottomRight:
-		return '▚'
 	case topLeft && topRight && bottomLeft && !bottomRight:
 		return '▛'
-	case !topLeft && topRight && bottomLeft && bottomRight:
+	case topLeft && topRight && !bottomLeft && bottomRight:
 		return '▜'
+	case topLeft && topRight && !bottomLeft && !bottomRight:
+		return '▀'
+	case topLeft && !topRight && bottomLeft && bottomRight:
+		return '▙'
+	case topLeft && !topRight && bottomLeft && !bottomRight:
+		return '▌'
+	case topLeft && !topRight && !bottomLeft && bottomRight:
+		return '▚'
+	case topLeft && !topRight && !bottomLeft && !bottomRight:
+		return '▘'
+	case !topLeft && topRight && bottomLeft && bottomRight:
+		return '▟'
 	case !topLeft && topRight && bottomLeft && !bottomRight:
 		return '▞'
+	case !topLeft && topRight && !bottomLeft && bottomRight:
+		return '▐'
 	case !topLeft && topRight && !bottomLeft && !bottomRight:
 		return '▝'
 	case !topLeft && !topRight && bottomLeft && bottomRight:
 		return '▄'
-	case topLeft && topRight && !bottomLeft && !bottomRight:
-		return '▀'
 	case !topLeft && !topRight && bottomLeft && !bottomRight:
 		return '▖'
 	case !topLeft && !topRight && !bottomLeft && bottomRight:
 		return '▗'
-	case topLeft && !topRight && !bottomLeft && !bottomRight:
-		return '▘'
-	case topLeft && !topRight && bottomLeft && !bottomRight:
-		return '▌'
-	case !topLeft && topRight && !bottomLeft && bottomRight:
-		return '▐'
 	case !topLeft && !topRight && !bottomLeft && !bottomRight:
 		return ' '
 	default:
 		return 'E'
+	}
+}
+
+func (dotMatrix *DotMatrix) Circle(x0 int, y0 int, radius int) {
+
+	x := radius - 1
+	y := 0
+	dx := 1
+	dy := 1
+	err := dx - (radius << 1)
+
+	for x >= y {
+
+		dotMatrix.On(x0+x, y0+y)
+		dotMatrix.On(x0+y, y0+x)
+		dotMatrix.On(x0-y, y0+x)
+		dotMatrix.On(x0-x, y0+y)
+		dotMatrix.On(x0-x, y0-y)
+		dotMatrix.On(x0-y, y0-x)
+		dotMatrix.On(x0+y, y0-x)
+		dotMatrix.On(x0+x, y0-y)
+
+		if err <= 0 {
+			y++
+			err += dy
+			dy += 2
+		}
+
+		if err > 0 {
+			x--
+			dx += 2
+			err += dx - (radius << 1)
+		}
 	}
 }

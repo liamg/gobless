@@ -5,16 +5,18 @@ import (
 )
 
 type Row struct {
-	columns []*Column
-	width   int
-	height  int
-	x       int
-	y       int
+	columns  []*Column
+	width    int
+	height   int
+	x        int
+	y        int
+	gridSize GridSize
 }
 
-func NewRow(columns ...*Column) *Row {
+func NewRow(size GridSize, columns ...*Column) *Row {
 	return &Row{
-		columns: columns,
+		columns:  columns,
+		gridSize: size,
 	}
 }
 

@@ -59,7 +59,7 @@ func (textbox *TextBox) GetTiles(gui *GUI) []Tile {
 
 	x, y := 0, 0
 
-	textWidth := textbox.width - 2 // remove border dimensions
+	textWidth := textbox.width - 3 // remove border dimensions
 	textHeight := textbox.height - 2
 
 	for _, r := range []rune(textbox.text) {
@@ -100,7 +100,7 @@ func (textbox *TextBox) GetTiles(gui *GUI) []Tile {
 		Tile{
 			Rectangle: image.Rectangle{
 				Min: image.Point{X: textbox.x + 1, Y: textbox.y + 1},
-				Max: image.Point{X: textbox.x + 1 + textbox.width - 2, Y: textbox.y + 1 + textbox.height - 2},
+				Max: image.Point{X: textbox.x + 1 + textbox.width - 3, Y: textbox.y + 1 + textbox.height - 3},
 			},
 			Cells: cells,
 		},

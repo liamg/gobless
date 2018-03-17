@@ -12,9 +12,10 @@ func main() {
 	helloTextbox := gobless.NewTextBox()
 	helloTextbox.SetX(10)
 	helloTextbox.SetY(3)
-	helloTextbox.SetWidth(14)
-	helloTextbox.SetHeight(3)
-	helloTextbox.SetText(`Hello World!`)
+	helloTextbox.SetWidth(64)
+	helloTextbox.SetHeight(10)
+	helloTextbox.SetTextWrap(true)
+	helloTextbox.SetText(`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc gravida vulputate augue, ut lobortis neque semper at. In hac habitasse platea dictumst. In tincidunt diam vitae bibendum posuere. Maecenas imperdiet nunc non ex dignissim rhoncus. Integer consectetur turpis sit amet fermentum eleifend. Fusce placerat urna in purus efficitur dictum ut at nibh. Cras bibendum arcu eget ligula posuere, a tristique dolor mattis. Vivamus quis lectus cursus, eleifend leo sit amet, pellentesque dolor.`)
 
 	quitTextbox := gobless.NewTextBox()
 	quitTextbox.SetWidth(22)

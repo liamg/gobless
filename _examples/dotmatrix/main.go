@@ -58,7 +58,23 @@ func main() {
 	quitTextbox.SetHeight(3)
 	quitTextbox.SetText(`Press Ctrl-q to exit.`)
 
-	gui.Render(dotMatrix, quitTextbox)
+	dotMatrix2 := gobless.NewDotMatrix()
+	dotMatrix2.SetY(4)
+	dotMatrix2.SetX(24)
+	dotMatrix2.SetWidth(22)
+	dotMatrix2.SetHeight(22)
+	dotMatrix2.SetStyle(
+		gobless.NewStyle(
+			gobless.DefaultStyle.BackgroundColor,
+			gobless.ColorRed,
+		),
+	)
+
+	dotMatrix2.Circle(20, 20, 10)
+	dotMatrix2.Circle(20, 20, 15)
+	dotMatrix2.Circle(20, 20, 20)
+
+	gui.Render(dotMatrix, quitTextbox, dotMatrix2)
 
 	gui.HandleKeyPress(gobless.KeyCtrlQ, func(event gobless.KeyPressEvent) {
 		gui.Close()

@@ -122,13 +122,9 @@ func (gui *GUI) renderComponents(components []Component) {
 	}
 
 	_, height := gui.Size()
-	rowHeight := height
-	spareHeight := 0
-	if rowCount > 0 {
-		rowHeightFloat := float64(height) / float64(rowCount)
-		rowHeight = int(math.Floor(rowHeightFloat))
-		spareHeight = height - (rowHeight * rowCount)
-	}
+	spareHeight := 0.0
+
+	rowHeightTwelfth := float64(height) / 12.0
 
 	rowOffset := 0
 
@@ -136,7 +132,17 @@ func (gui *GUI) renderComponents(components []Component) {
 		switch row := component.(type) {
 		case *Row:
 			row.width = w
-			row.height = rowHeight + spareHeight // give "leftover" height runes to the first row, e.g. if there is a height of 10 runes and there are 3 rows, each row will get 3 runes of height, and the first row will get the "spare" 1, to make 10.
+			if row.gridSize == GridSizeFull {
+				row.height = height
+			} else {
+				heightFloat := float64(row.gridSize) * rowHeightTwelfth
+				spareHeight += (heightFloat - math.Floor(heightFloat))
+				row.height = int(math.Floor(heightFloat))
+				for spareHeight >= 0.9999 {
+					spareHeight -= 1.0
+					row.height++
+				}
+			}
 			row.y = rowOffset
 			row.x = 0
 			rowOffset += row.height

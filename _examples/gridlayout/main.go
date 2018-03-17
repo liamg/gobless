@@ -10,20 +10,35 @@ func main() {
 	defer gui.Close()
 
 	helloTextbox := gobless.NewTextBox()
-	helloTextbox.SetText(`Hello World!`)
+	helloTextbox.SetText(`Bee and wasp stings can be painful and in some people they can trigger a life-threatening reaction. 
+		
+Symptoms include:
+
+ - Wheezing or difficulty breathing
+ - Severe swelling of the face, throat, or lips
+ - Nausea, vomiting, or diarrhea
+ - Stomach cramps
+ - Itching or hives (in places other than the site of the sting)
+ - Fast heart rate
+ - Sudden death`)
 	helloTextbox.SetBorderColor(gobless.ColorGreen)
-	helloTextbox.SetTitle("Message")
+	helloTextbox.SetTitle("Information")
+	helloTextbox.SetTextWrap(true)
 
 	quitTextbox := gobless.NewTextBox()
 	quitTextbox.SetText(`Press Ctrl-q to exit.`)
 	quitTextbox.SetBorderColor(gobless.ColorDarkRed)
 
 	chart := gobless.NewBarChart()
-	chart.SetTitle("Traffic")
+	chart.SetTitle("Diarrhoea")
 	chart.SetYScale(100)
 	chart.SetBar("EU", 60)
 	chart.SetBar("NA", 72)
 	chart.SetBar("SA", 37)
+	chart.SetBarStyle(gobless.NewStyle(
+		gobless.ColorOliveDrab,
+		gobless.DefaultStyle.ForegroundColor,
+	))
 
 	chart2 := gobless.NewBarChart()
 	chart2.SetTitle("Wasp Count")
@@ -36,23 +51,26 @@ func main() {
 
 	rows := []gobless.Component{
 		gobless.NewRow(
+			gobless.GridSizeThreeQuarters,
 			gobless.NewColumn(
-				gobless.ColumnSizeTwoThirds,
+				gobless.GridSizeTwoThirds,
 				helloTextbox,
 			),
 			gobless.NewColumn(
-				gobless.ColumnSizeOneThird,
+				gobless.GridSizeOneThird,
 				gobless.NewRow(
+					gobless.GridSizeFull,
 					gobless.NewColumn(
-						gobless.ColumnSizeFull,
+						gobless.GridSizeFull,
 						chart,
 						chart2,
 					),
 				),
 			),
 		), gobless.NewRow(
+			gobless.GridSizeOneQuarter,
 			gobless.NewColumn(
-				gobless.ColumnSizeFull,
+				gobless.GridSizeFull,
 				quitTextbox,
 			),
 		),

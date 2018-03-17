@@ -1,11 +1,18 @@
 # gobless
 Build beautiful terminal dashboards and GUIs in Golang. 
 
-*Requires golang >=1.10*
+![example](./_examples/gridlayout/example.png)
 
-The name was intended to be pronounced _go-bless_ due to the inspiration from [blessed-contrib](https://github.com/yaronn/blessed-contrib), but _gob-less_ is definitely funnier, so we'll go with that.
+The name was intended to be pronounced _go-bless_ due to the inspiration from [blessed-contrib](https://github.com/yaronn/blessed-contrib), but _gob-less_ is kind of funnier, so we'll go with that instead.
 
-_screenshot here plz_
+Thanks to [tcell](https://github.com/gdamore/tcell), full cross-platform terminal support is expected.
+
+## Requirements
+
+- Go 1.10+
+- Terminal with:
+  - Unicode support
+  - 256 color support
 
 ## Get Started
 
@@ -15,11 +22,23 @@ You can get started by viewing the various [examples](_examples/).
 
 ### Text Box
 
+![example](./_examples/textbox/example.png)
+
+```golang
+textbox := gobless.NewTextBox()
+textbox.SetWidth(64)
+textbox.SetHeight(10)
+helloTextbox.SetTextWrap(true)
+helloTextbox.SetText(`Lorem ipsum...`)
+```
+
+Full example code is [here](_examples/textbox).
+
 ### Bar Chart
 
 ![example](./_examples/barchart/example.gif)
 
-```
+```golang
 chart := gobless.NewBarChart()
 chart.SetTitle("Traffic")
 chart.SetWidth(40)
@@ -30,7 +49,7 @@ chart.SetBar("US", 72)
 chart.SetBar("Asia", 37)
 ```
 
-### Sparkline
+Full example code is [here](_examples/barchart).
 
 ### Progress Bar
 
@@ -50,30 +69,43 @@ chart.SetBar("Asia", 37)
 
 ### Tree
 
+### Dot Matrix
+
+The dot matrix component allows you set blocks of colour at double the resolution of the terminal characters, using the various partial quadrant unicode characters.
+
+![example](./_examples/dotmatrix/example.png)
+
+Example code is [here](_examples/dotmatrix).
+
 ## Layout System
 
 Gobless includes a built-in CSS style 12 column nestable grid layout system. This uses `Row`s and `Column`s (which are themselves components) to quickly build a UI with minimal effort. 
 
+![example](./_examples/gridlayout/example.png)
+
 ```golang
 rows := []gobless.Component{
 	gobless.NewRow(
+		gobless.GridSizeHalf,
 		gobless.NewColumn(
-			gobless.ColumnSizeTwoThirds,
+			gobless.GridSizeTwoThirds,
 			helloTextbox,
 		),
 		gobless.NewColumn(
-			gobless.ColumnSizeOneThird,
+			gobless.GridSizeOneThird,
 			gobless.NewRow(
+				gobless.GridSizeFull,
 				gobless.NewColumn(
-					gobless.ColumnSizeFull,
+					gobless.GridSizeFull,
 					chart,
 					chart2,
 				),
 			),
 		),
 	), gobless.NewRow(
+		gobless.GridSizeHalf,
 		gobless.NewColumn(
-			gobless.ColumnSizeFull,
+			gobless.GridSizeFull,
 			quitTextbox,
 		),
 	),

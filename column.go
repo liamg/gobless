@@ -4,27 +4,27 @@ type Column struct {
 	components     []Component
 	width          int
 	height         int
-	size           ColumnSize
+	size           GridSize
 	x              int
 	y              int
 	firstRowHeight int
 	rowHeight      int
 }
 
-type ColumnSize int
+type GridSize int
 
 const (
-	ColumnSizeFull          ColumnSize = 12
-	ColumnSizeFiveSixths    ColumnSize = 10
-	ColumnSizeThreeQuarters ColumnSize = 9
-	ColumnSizeTwoThirds     ColumnSize = 8
-	ColumnSizeHalf          ColumnSize = 6
-	ColumnSizeOneThird      ColumnSize = 4
-	ColumnSizeQuarter       ColumnSize = 3
-	ColumnSizeOneSixth      ColumnSize = 2
+	GridSizeFull          GridSize = 12
+	GridSizeFiveSixths    GridSize = 10
+	GridSizeThreeQuarters GridSize = 9
+	GridSizeTwoThirds     GridSize = 8
+	GridSizeHalf          GridSize = 6
+	GridSizeOneThird      GridSize = 4
+	GridSizeOneQuarter    GridSize = 3
+	GridSizeOneSixth      GridSize = 2
 )
 
-func NewColumn(size ColumnSize, components ...Component) *Column {
+func NewColumn(size GridSize, components ...Component) *Column {
 	return &Column{
 		components: components,
 		size:       size,
